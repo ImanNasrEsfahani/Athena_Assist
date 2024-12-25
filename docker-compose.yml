@@ -1,0 +1,24 @@
+services:
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    environment:
+      - NGROK_AUTHTOKEN=2qTW0rCSuKz4NTUNU5XJrR2hUDH_21Zq6jtQwbeCJTMc97i5U
+    command: http fastapi_app:8000  # Forwarding to FastAPI app running on port 8000
+    ports:
+      - "3040:3040"  # Expose ngrok web interface
+    attach: false
+
+  fastapi_app:
+    container_name: fastapi
+    build: .
+    ports:
+      - "8000:8000"
+    attach: false
+    volumes:
+      - .:/app  # Bind mount current directory to /app in the container
+      # - ./db:/app/db # bind database users
+      # - ./models/market.db:/app/models/market.db # bind databse market price
+    environment:
+      - NGROK_AUTHTOKEN=2qTW0rCSuKz4NTUNU5XJrR2hUDH_21Zq6jtQwbeCJTMc97i5U
+
