@@ -1,5 +1,36 @@
 #!/bin/bash
 
+# Define color codes
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Check system version and distribution
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    echo "Distribution: $NAME"
+    echo "Version: $VERSION"
+    echo "Codename: $VERSION_CODENAME"
+else
+    echo "Unable to determine system version and distribution"
+    exit 1
+fi
+
+# Check if the distribution is Ubuntu and version is 20
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    if [ "$NAME" = "Ubuntu" ] && [[ "$VERSION_ID" == "20."* ]]; then
+        echo "Distribution is Ubuntu 20. Proceeding..."
+    else
+        echo "Distribution is not Ubuntu 20. Exiting..."
+        exit 1
+    fi
+else
+    echo "/etc/os-release file not found. Unable to determine distribution."
+    exit 1
+fi
+
 # Function to generate a random password
 generate_password() {
     local length=12
@@ -16,13 +47,8 @@ sudo apt update -y
 # Install Xfce desktop environment, VNC server, and autocutsel
 sudo apt install -y xfce4 xfce4-goodies tightvncserver autocutsel
 
-# Install Firefox
-sudo apt install -y firefox nano gedit zip unzip
-
-# Set VNC password automatically
-mkdir -p ~/.vnc
-echo "$VNC_PASSWORD" | vncpasswd -f > ~/.vnc/passwd
-chmod 600 ~/.vnc/passwd
+# Install more packages
+sudo apt install -y firefox nano gedit zip unzip screen jq netstat
 
 # Create VNC configuration file
 cat > ~/.vnc/xstartup << EOF
@@ -35,6 +61,12 @@ EOF
 
 # Make the xstartup file executable
 chmod +x ~/.vnc/xstartup
+
+
+# Set VNC password automatically
+mkdir -p ~/.vnc
+echo "$VNC_PASSWORD" | vncpasswd -f > ~/.vnc/passwd
+chmod 600 ~/.vnc/passwd
 
 # Create a systemd service file for VNC
 sudo tee /etc/systemd/system/vncserver@.service > /dev/null << EOF
@@ -76,12 +108,6 @@ vncconfig &
 # Check the SSH port in use by reading the sshd_config file
 ssh_port=$(grep -i "^Port" /etc/ssh/sshd_config | awk '{print $2}')
 ssh_port=${ssh_port:-22}  # Default to 22 if not found
-
-# Define color codes
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-CYAN='\033[0;36m'
-NC='\033[0m' # No Color
 
 # Print connection information
 echo -e "${GREEN}VNC server and Firefox installation complete!${NC}"

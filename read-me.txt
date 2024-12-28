@@ -1,0 +1,36 @@
+without domain
+1- prepare remote server ubuntu 20LTS
+2- make a ssh connection to it.
+3- get files of project by git and wget
+4- install docker
+5- install ngrok
+6- install jupyter - optional
+7- install vnc
+8- install wine
+9- install tightvnc on local system
+10- make a connection to vnc server point with ssh port forward
+11- connect to vnc server
+12- download Meta trader 5 from broker site and login
+13- install python windows and install packages MetaTrader5 and MTlinux
+14- run server MTlinux and keep port
+15- edit .env file in project
+16- docker compose up -d
+
+with domain
+1- prepare remote server ubuntu 20LTS
+2- config dns to point to this server IP
+3- make a ssh connection to it.
+4- get files of project by git and wget
+5- install docker
+6- install traefic and config for for domain
+7- install jupyter - optional
+8- install vnc
+9- install wine
+10- install tightvnc on local system
+11- make a connection to vnc server point with ssh port forward
+12- connect to vnc server
+13- download Meta trader 5 from broker site and login
+14- install python windows and install packages MetaTrader5 and MTlinux
+15- run server MTlinux and keep port
+16- edit .env file in project
+17- docker compose up -d
