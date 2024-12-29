@@ -117,10 +117,10 @@ networks:
 EOL
 
     # Start Traefik
-    docker-compose up -d || { echo "Failed to start Traefik"; exit 1; }
+    # docker-compose up -d || { echo "Failed to start Traefik"; exit 1; }
 
-    echo "Traefik has been set up and is running."
-    echo "Access the Traefik dashboard at: https://${DASHBOARD_DOMAIN}"
+    echo "Traefik has been set up and is waiting to run with FastAPI."
+    echo "Access the Traefik dashboard at after run with FastAPI: https://${DASHBOARD_DOMAIN}"
     echo "Username: admin"
     echo "Password: The password you entered"
 }
