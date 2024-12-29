@@ -89,6 +89,19 @@ check_success "Addition of Docker repository"
 
 # Update package list again
 print_color "$YELLOW" "Updating package list..."
+
+# Check if the file exists
+SOURCES_LIST="/etc/apt/sources.list"
+if [ -f "$SOURCES_LIST" ]; then
+    # Use sed to comment out lines starting with "deb cdrom:" or "deb file:/cdrom"
+    sudo sed -i '/^deb cdrom:/s/^/# /' "$SOURCES_LIST"
+    sudo sed -i '/^deb file:\/cdrom/s/^/# /' "$SOURCES_LIST"
+
+    echo "CD-ROM repositories have been commented out in $SOURCES_LIST"
+else
+    echo "Sources list file not found: $SOURCES_LIST"
+fi
+
 sudo apt-get update
 check_success "Package list update"
 
