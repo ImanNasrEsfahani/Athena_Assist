@@ -51,4 +51,4 @@ sudo apt update -y || { print_color "$RED" "Failed to update apt packages"; exit
 sudo apt install -y xfce4 xfce4-goodies tightvncserver autocutsel || { print_color "$RED" "Failed to install xfce desktop environment"; exit 1; }
 
 # Install more packages
-sudo apt install -y firefox nano gedit zip unzip screen jq netstat || { print_color "$RED" "Failed to install requirement packages like firefox gedit zip and etc"; exit 1; }
+sudo apt install -y firefox nano gedit zip unzip screen jq || { print_color "$RED" "Failed to install requirement packages like firefox gedit zip and etc"; exit 1; }
