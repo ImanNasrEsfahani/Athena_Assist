@@ -46,7 +46,6 @@ async def lifespan(app: FastAPI):
     loggerMain.info("Shutdown event triggered")
     await bot_manager.shutdown()
 
-
 # Create an instnce of FastAPI
 app = FastAPI(title="ِAthena Application", version="1.0", lifespan=lifespan)
 # Configure CORS
@@ -77,6 +76,23 @@ app.add_middleware(
 app.include_router(app_router)
 app.include_router(updater_router)
 
+
+@app.get("/account_info")
+async def get_account_info():
+    if not mt5.initialize():
+        return {"error": "MT5 initialization failed"}
+
+    account_info = mt5.account_info()
+    if account_info is None:
+        return {"error": "Failed to get account info"}
+
+    return {
+        "login": account_info.login,
+        "balance": account_info.balance,
+        "equity": account_info.equity,
+        "margin": account_info.margin,
+        "free_margin": account_info.margin_free,
+    }
 
 # app.include_router(telegram_webhook.router)
 
