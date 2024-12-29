@@ -7,4 +7,6 @@ https://download.mql5.com/cdn/web/alpari/mt5/alpari5setup.exe
 iman.nasr.esfahan@gmail.com
 /qRe3Mn3qsyHQPY
 
+https://www.python.org/ftp/python/3.10.10/python-3.10.10-amd64.exe
 
+python3 -m mt5linux "C:\users\my\AppData\Local\Programs\Python\Python310\python.exe"
