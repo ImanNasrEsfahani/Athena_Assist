@@ -77,6 +77,18 @@ EOL
     touch acme.json
     chmod 600 acme.json
 
+    # Generate admin password for Traefik dashboard
+    ADMIN_PASSWORD=$(openssl passwd -apr1)
+    sed -i "s/admin:${ADMIN_PASSWORD}/admin:$(echo $ADMIN_PASSWORD | sed 's/\//\\\//g')/" docker-compose.yml
+
+    # Start Traefik
+    docker-compose up -d
+
+    echo "Traefik has been set up and is running."
+    echo "Access the Traefik dashboard at: https://${DASHBOARD_DOMAIN}"
+    echo "Username: admin"
+    echo "Password: The password you entered"
+
     # Create docker-compose.yml
     cat > docker-compose.yml <<EOL
 version: '3'
@@ -110,17 +122,6 @@ networks:
     name: traefik_network
 EOL
 
-    # Generate admin password for Traefik dashboard
-    ADMIN_PASSWORD=$(openssl passwd -apr1)
-    sed -i "s/admin:${ADMIN_PASSWORD}/admin:$(echo $ADMIN_PASSWORD | sed 's/\//\\\//g')/" docker-compose.yml
-
-    # Start Traefik
-    docker-compose up -d
-
-    echo "Traefik has been set up and is running."
-    echo "Access the Traefik dashboard at: https://${DASHBOARD_DOMAIN}"
-    echo "Username: admin"
-    echo "Password: The password you entered"
 }
 
 # Main script execution

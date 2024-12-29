@@ -142,7 +142,7 @@ Description=Jupyter Notebook
 [Service]
 Type=simple
 PIDFile=/run/jupyter.pid
-ExecStart=$JUPYTER_PATH --allow-root --config=~/.jupyter/jupyter_notebook_config.py
+ExecStart=$JUPYTER_PATH --config=~/.jupyter/jupyter_notebook_config.py
 User=$USER
 Group=$USER
 WorkingDirectory=/$USER
