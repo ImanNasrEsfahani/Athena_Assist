@@ -23,6 +23,7 @@ with domain
 4- get files of project by git and wget
 5- install docker
 6- install traefic and config for domain
+    chmod +x traefik-installation.bash
     which make a directory with name traefic in your project
 
 - run command docker compose -f docker-compose-with-domain.yml up -d
