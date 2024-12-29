@@ -84,6 +84,27 @@ else
     echo "Sources list file not found: $SOURCES_LIST"
 fi
 
+# Check if Docker is installed
+if command -v docker &> /dev/null; then
+    echo "Docker is installed. Proceeding with cleanup..."
+
+    # Stop all running containers
+    echo "Stopping all running containers..."
+    docker stop $(docker ps -q) 2>/dev/null
+
+    # Remove all containers
+    echo "Removing all containers..."
+    docker rm $(docker ps -a -q) 2>/dev/null
+
+    # Remove all images
+    echo "Removing all images..."
+    docker rmi $(docker images -a -q) 2>/dev/null
+
+    echo "Docker cleanup completed."
+else
+    echo "Docker is not installed on this system."
+fi
+
 # Check if the network exists and remove it if it does
 if sudo docker network inspect my_network &>/dev/null; then
     print_color "$YELLOW" "Removing existing 'my_network'..."
