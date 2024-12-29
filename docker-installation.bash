@@ -6,6 +6,11 @@ YELLOW='\033[0;33m'
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
+# Function to print colored output
+print_color() {
+    echo -e "${1}${2}${NC}"
+}
+
 # root user check
 if [ "$(id -u)" -eq 0 ]; then
     print_color "$GREEN" "Script is running as root"
@@ -38,11 +43,6 @@ else
     echo "/etc/os-release file not found. Unable to determine distribution."
     exit 1
 fi
-
-# Function to print colored output
-print_color() {
-    echo -e "${1}${2}${NC}"
-}
 
 # Function to check command success
 check_success() {
