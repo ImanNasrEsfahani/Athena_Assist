@@ -34,7 +34,7 @@ with domain
 
 7- install jupyter - optional
 8- install GUI installation
-- login by
+- login by GUI enviroment from panel
 9- install wine
 10- install tightVNC on local system
 11- make a connection to vnc server point with ssh port forward
