@@ -21,6 +21,8 @@ services:
     container_name: fastapi
     build: .
     attach: false
+    ports:
+      - "8000:8000"
     volumes:
       - .:/app  # Bind mount current directory to /app in the container
       # - ./db:/app/db # bind database users
@@ -35,3 +37,7 @@ services:
       - "traefik.http.routers.fastapi.entrypoints=websecure"
       - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
       - "traefik.http.services.fastapi.loadbalancer.server.port=8000"
+
+networks:
+  traefik-network:
+    external: true
