@@ -11,11 +11,13 @@ print_color() {
     echo -e "${1}${2}${NC}"
 }
 
-# root user check
+# Check if user is root or has sudo privileges
 if [ "$(id -u)" -eq 0 ]; then
     print_color "$GREEN" "Script is running as root"
+elif sudo -n true 2>/dev/null; then
+    print_color "$GREEN" "User has sudo privileges"
 else
-    print_color "$RED" "This script must be run as root"
+    print_color "$RED" "This script requires root privileges or sudo access"
     exit 1
 fi
 
