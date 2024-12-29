@@ -118,11 +118,11 @@ networks:
     external: true
 EOL
 
-    if docker network inspect traefik-network >/dev/null 2>&1; then
+    if docker network inspect traefik_network >/dev/null 2>&1; then
         echo "Traefik network already exists"
     else
         echo "Traefik network does not exist. Creating..."
-        if docker network create traefik-network; then
+        if docker network create traefik_network; then
             echo "Traefik network has been created successfully"
         else
             echo "Failed to create traefik network"

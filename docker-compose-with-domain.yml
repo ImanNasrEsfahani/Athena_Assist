@@ -22,5 +22,5 @@ services:
       - "traefik.http.services.fastapi.loadbalancer.server.port=8000"
 
 networks:
-  traefik-network:
+  traefik_network:
     external: true
