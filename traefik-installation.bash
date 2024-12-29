@@ -39,6 +39,11 @@ setup_traefik() {
     HTTPS_PORT=${HTTPS_PORT:-443}
     read -p "Enter Traefik dashboard subdomain (e.g., traefik.example.com): " DASHBOARD_DOMAIN
 
+    # Generate admin password for Traefik dashboard
+    echo "Please enter a password for the Traefik dashboard:"
+    ADMIN_PASSWORD=$(openssl passwd -apr1)
+    ESCAPED_PASSWORD=$(echo "$ADMIN_PASSWORD" | sed 's/[\/&]/\\&/g')
+
     # Create necessary directories
     mkdir -p traefik
     cd traefik
@@ -77,18 +82,6 @@ EOL
     touch acme.json
     chmod 600 acme.json
 
-    # Generate admin password for Traefik dashboard
-    ADMIN_PASSWORD=$(openssl passwd -apr1)
-    sed -i "s/admin:${ADMIN_PASSWORD}/admin:$(echo $ADMIN_PASSWORD | sed 's/\//\\\//g')/" docker-compose.yml
-
-    # Start Traefik
-    docker-compose up -d
-
-    echo "Traefik has been set up and is running."
-    echo "Access the Traefik dashboard at: https://${DASHBOARD_DOMAIN}"
-    echo "Username: admin"
-    echo "Password: The password you entered"
-
     # Create docker-compose.yml
     cat > docker-compose.yml <<EOL
 version: '3'
@@ -116,12 +109,20 @@ services:
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=admin:${ADMIN_PASSWORD}"
+      - "traefik.http.middlewares.auth.basicauth.users=admin:$ESCAPED_PASSWORD"
 
 networks:
   default:
     name: traefik_network
 EOL
 
+    # Start Traefik
+    docker-compose up -d
+
+    echo "Traefik has been set up and is running."
+    echo "Access the Traefik dashboard at: https://${DASHBOARD_DOMAIN}"
+    echo "Username: admin"
+    echo "Password: The password you entered"
 }
 
 # Main script execution
