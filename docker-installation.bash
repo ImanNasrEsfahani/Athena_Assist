@@ -13,12 +13,21 @@ print_color() {
 
 # Check if user is root or has sudo privileges
 if [ "$(id -u)" -eq 0 ]; then
-    print_color "$GREEN" "Script is running as root"
-elif sudo -n true 2>/dev/null; then
-    print_color "$GREEN" "User has sudo privileges"
+    echo "Script is running as root"
+    return 0
+elif groups | grep -q '\bsudo\b'; then
+    if sudo -v -n &>/dev/null; then
+        echo "User has sudo privileges and is authenticated"
+        return 0
+    else
+        echo "User has sudo privileges but needs to authenticate"
+        sudo -v || return 1
+        echo "Authentication successful"
+        return 0
+    fi
 else
-    print_color "$RED" "This script requires root privileges or sudo access"
-    exit 1
+    echo "This script requires root privileges or sudo access"
+    return 1
 fi
 
 # Check system version and distribution
