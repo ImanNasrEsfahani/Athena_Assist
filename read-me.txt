@@ -52,7 +52,6 @@ with domain
 
     find port that has been shown in terminal and write it down
 
-10- install tightVNC on local system
 11- make a connection to vnc server point with ssh port forward
 12- connect to vnc server
 13- download Meta trader 5 from broker site and login
