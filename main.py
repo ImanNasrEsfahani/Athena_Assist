@@ -21,7 +21,7 @@ setup_logging()
 
 # from src.updater.models.base import Base as BaseUpdater
 
-import mt5linux as mt5
+from mt5linux import MetaTrader5 as mt5
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,6 +38,7 @@ async def lifespan(app: FastAPI):
     create_tables()
     # Base.metadata.create_all(bind=engine)
 
+    mt5 = MetaTrader5(address="host.docker.internal", port=18821)
     if not mt5.initialize(address="host.docker.internal", port=18821):
         print("MT5 initialization failed")
         mt5.shutdown()
