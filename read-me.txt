@@ -33,7 +33,8 @@ with domain
         https://traefik.imannasr.com/
 
 7- install jupyter - optional
-8- install vnc
+8- install GUI installation
+- login by
 9- install wine
 10- install tightVNC on local system
 11- make a connection to vnc server point with ssh port forward
