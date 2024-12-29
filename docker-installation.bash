@@ -84,6 +84,15 @@ else
     echo "Sources list file not found: $SOURCES_LIST"
 fi
 
+# Check if the network exists and remove it if it does
+if sudo docker network inspect my_network &>/dev/null; then
+    print_color "$YELLOW" "Removing existing 'my_network'..."
+    sudo docker network rm my_network
+    check_success "Removal of 'my_network'"
+else
+    print_color "$GREEN" "Network 'my_network' does not exist."
+fi
+
 # Remove old versions of Docker
 print_color "$YELLOW" "Removing old Docker versions if present..."
 sudo apt-get remove -y docker docker.io containerd runc docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || true
