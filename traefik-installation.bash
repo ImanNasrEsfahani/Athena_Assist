@@ -117,8 +117,18 @@ networks:
     name: traefik_network
 EOL
 
-    docker network create traefik-network || { echo "Creating traefik network has problem"; exit 1; }
-    echo "Traefik network has been created"
+    if docker network inspect traefik-network >/dev/null 2>&1; then
+        echo "Traefik network already exists"
+    else
+        echo "Traefik network does not exist. Creating..."
+        if docker network create traefik-network; then
+            echo "Traefik network has been created successfully"
+        else
+            echo "Failed to create traefik network"
+            exit 1
+        fi
+    fi
+
 
     # Start Traefik
     # docker-compose up -d || { echo "Failed to start Traefik"; exit 1; }
