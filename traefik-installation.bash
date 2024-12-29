@@ -115,6 +115,7 @@ services:
 networks:
   default:
     name: traefik_network
+    external: true
 EOL
 
     if docker network inspect traefik-network >/dev/null 2>&1; then
