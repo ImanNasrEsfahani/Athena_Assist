@@ -85,7 +85,6 @@ EOL
 
     # Create docker-compose.yml
     cat > docker-compose.yml <<EOL || { echo "Failed to create docker-compose.yml"; exit 1; }
-version: '3'
 
 services:
   traefik:

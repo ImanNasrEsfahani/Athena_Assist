@@ -23,7 +23,10 @@ with domain
 4- get files of project by git and wget
 5- install docker
 6- install traefic and config for domain
+    which make a directory with name traefic in your project
+
 - run command docker compose -f docker-compose-with-domain.yml up -d
+    docker compose -f ./traefik/docker-compose.yml -f docker-compose-with-domain.yml up -d
 7- install jupyter - optional
 8- install vnc
 9- install wine

@@ -1,22 +1,5 @@
 services:
 
-  traefik:
-    image: traefik:v2.5
-    container_name: traefik
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/traefik.yml:/traefik.yml:ro
-      - ./traefik/acme.json:/acme.json
-    networks:
-      - traefik-network
-
   fastapi_app:
     container_name: fastapi
     build: .
@@ -27,8 +10,6 @@ services:
       - .:/app  # Bind mount current directory to /app in the container
       # - ./db:/app/db # bind database users
       # - ./models/market.db:/app/models/market.db # bind databse market price
-    environment:
-      - NGROK_AUTHTOKEN=2qTW0rCSuKz4NTUNU5XJrR2hUDH_21Zq6jtQwbeCJTMc97i5U
     networks:
       - traefik-network
     labels:
