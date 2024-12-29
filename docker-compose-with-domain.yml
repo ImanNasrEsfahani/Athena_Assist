@@ -13,7 +13,7 @@ services:
       # - ./db:/app/db # bind database users
       # - ./models/market.db:/app/models/market.db # bind databse market price
     networks:
-      - traefik-network
+      - traefik_network
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.fastapi.rule=Host(`fastapi.imannasr.com`)"
