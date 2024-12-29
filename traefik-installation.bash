@@ -1,35 +1,47 @@
 #!/bin/bash
 
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NOCOLOR='\033[0m'
+
+# Function to print colored output
+print_color() {
+    echo -e "${1}${2}${NOCOLOR}"
+}
+
 # Function to check if Docker is installed
 check_docker() {
     if command -v docker &> /dev/null; then
-        echo "Docker is already installed."
+        print_color "$RED" "Docker is already installed."
         return 0
     else
-        echo "Docker is not installed."
+        print_color "$GREEN" "Docker is not installed."
         return 1
     fi
 }
 
 # Function to install Docker
 install_docker() {
-    echo "Installing Docker..."
-    sudo apt-get update || { echo "Failed to update package list"; exit 1; }
+    print_color "$GREEN" "Installing Docker..."
+    sudo apt-get update || { print_color "$RED" "Failed to update package list"; exit 1; }
 
-    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common || { echo "Failed to install prerequisites"; exit 1; }
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - || { echo "Failed to add Docker GPG key"; exit 1; }
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"  || { echo "Failed to add Docker repository"; exit 1; }
-    sudo apt-get update || { echo "Failed to update package list"; exit 1; }
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io || { echo "Failed to install Docker"; exit 1; }
-    sudo systemctl enable docker || { echo "Failed to enable Docker service"; exit 1; }
-    sudo systemctl start docker || { echo "Failed to start Docker service"; exit 1; }
-    sudo usermod -aG docker $USER || { echo "Failed to add user to Docker group"; exit 1; }
-    echo "Docker installed successfully."
+    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common || { print_color "$RED" "Failed to install prerequisites"; exit 1; }
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - || { print_color "$RED" "Failed to add Docker GPG key"; exit 1; }
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"  || { print_color "$RED" "Failed to add Docker repository"; exit 1; }
+    sudo apt-get update || { print_color "$RED" "Failed to update package list"; exit 1; }
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io || { print_color "$RED" "Failed to install Docker"; exit 1; }
+    sudo systemctl enable docker || { print_color "$RED" "Failed to enable Docker service"; exit 1; }
+    sudo systemctl start docker || { print_color "$RED" "Failed to start Docker service"; exit 1; }
+    sudo usermod -aG docker $USER || { print_color "$RED" "Failed to add user to Docker group"; exit 1; }
+    print_color "$GREEN" "Docker installed successfully."
 }
 
 # Function to install and configure Traefik
 setup_traefik() {
-    echo "Setting up Traefik..."
+    print_color "$GREEN" "Setting up Traefik..."
 
     # Prompt for necessary information
     read -p "Enter your domain (e.g., example.com): " DOMAIN
@@ -42,15 +54,15 @@ setup_traefik() {
 
     # Generate admin password for Traefik dashboard
     echo "Please enter a password for the Traefik dashboard:"
-    ADMIN_PASSWORD=$(openssl passwd -apr1) || { echo "Failed to generate password hash"; exit 1; }
-    ESCAPED_PASSWORD=$(echo "$ADMIN_PASSWORD" | sed 's/\$/\$\$/g') || { echo "Failed to escape password"; exit 1; }
+    ADMIN_PASSWORD=$(openssl passwd -apr1) || { print_color "$RED" "Failed to generate password hash"; exit 1; }
+    ESCAPED_PASSWORD=$(echo "$ADMIN_PASSWORD" | sed 's/\$/\$\$/g') || { print_color "$RED" "Failed to escape password"; exit 1; }
 
     # Create necessary directories
-    mkdir -p traefik || { echo "Failed to create traefik directory"; exit 1; }
-    cd traefik || { echo "Failed to change to traefik directory"; exit 1; }
+    mkdir -p traefik || { print_color "$RED" "Failed to create traefik directory"; exit 1; }
+    cd traefik || { print_color "$RED" "Failed to change to traefik directory"; exit 1; }
 
     # Create traefik.yml
-    cat > traefik.yml <<EOL || { echo "Failed to create traefik.yml"; exit 1; }
+    cat > traefik.yml <<EOL || { print_color "$RED" "Failed to create traefik.yml"; exit 1; }
 api:
   dashboard: true
 
@@ -82,11 +94,11 @@ log:
 EOL
 
     # Create empty acme.json and set permissions
-    touch acme.json || { echo "Failed to create acme.json"; exit 1; }
-    chmod 600 acme.json || { echo "Failed to set permissions on acme.json"; exit 1; }
+    touch acme.json || { print_color "$RED" "Failed to create acme.json"; exit 1; }
+    chmod 600 acme.json || { print_color "$RED" "Failed to set permissions on acme.json"; exit 1; }
 
     # Create docker-compose.yml
-    cat > docker-compose.yml <<EOL || { echo "Failed to create docker-compose.yml"; exit 1; }
+    cat > docker-compose.yml <<EOL || { print_color "$RED" "Failed to create docker-compose.yml"; exit 1; }
 
 services:
   traefik:
@@ -119,13 +131,13 @@ networks:
 EOL
 
     if docker network inspect traefik_network >/dev/null 2>&1; then
-        echo "Traefik network already exists"
+        print_color "$RED" "Traefik network already exists"
     else
-        echo "Traefik network does not exist. Creating..."
+        print_color "$GREEN" "Traefik network does not exist. Creating..."
         if docker network create traefik_network; then
-            echo "Traefik network has been created successfully"
+            print_color "$GREEN" "Traefik network has been created successfully"
         else
-            echo "Failed to create traefik network"
+            print_color "$RED" "Failed to create traefik network"
             exit 1
         fi
     fi
@@ -134,19 +146,19 @@ EOL
     # Start Traefik
     # docker-compose up -d || { echo "Failed to start Traefik"; exit 1; }
 
-    echo "Traefik has been set up and is waiting to run with FastAPI."
-    echo "Access the Traefik dashboard at after run with FastAPI: https://${DASHBOARD_DOMAIN}"
-    echo "Username: admin"
-    echo "Password: The password you entered"
+    print_color "$GREEN" "Traefik has been set up and is waiting to run with FastAPI."
+    print_color "$GREEN" "Access the Traefik dashboard at after run with FastAPI: https://${DASHBOARD_DOMAIN}"
+    print_color "$GREEN" "Username: admin"
+    print_color "$GREEN" "Password: The password you entered"
 }
 
 # Main script execution
 if check_docker; then
-    echo "Proceeding with Traefik setup."
+    print_color "$GREEN" "Proceeding with Traefik setup."
 else
     install_docker
 fi
 
 setup_traefik
 
-echo "Setup complete. Please ensure your domain's DNS is properly configured to point to this server."
+print_color "$GREEN" "Setup complete. Please ensure your domain's DNS is properly configured to point to this server."

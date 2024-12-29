@@ -28,7 +28,6 @@ with domain
 
 - run command docker compose -f docker-compose-with-domain.yml up -d
     docker compose -f ./traefik/docker-compose.yml up -d
-    docker network connect traefik-network traefik
     docker compose -f docker-compose-with-domain.yml up -d
     check dashboard
         https://traefik.imannasr.com/

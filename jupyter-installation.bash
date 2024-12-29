@@ -114,6 +114,13 @@ fi
 jupyter notebook password
 check_success "Jupyter password setup"
 
+# Verify password is saved
+if grep -q "c.NotebookApp.password" ~/.jupyter/jupyter_notebook_config.json; then
+    print_color "$GREEN" "Password successfully saved in configuration"
+else
+    print_color "$RED" "Password not found in configuration. Check ~/.jupyter/jupyter_notebook_config.json"
+fi
+
 # Configure Jupyter
 print_color "$BLUE" "Configuring Jupyter..."
 cat << EOF >> ~/.jupyter/jupyter_notebook_config.py
@@ -145,7 +152,7 @@ PIDFile=/run/jupyter.pid
 ExecStart=$JUPYTER_PATH --config=~/.jupyter/jupyter_notebook_config.py
 User=$USER
 Group=$USER
-WorkingDirectory=/$USER
+WorkingDirectory=/home
 Restart=always
 RestartSec=20
 
