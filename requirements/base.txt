@@ -7,7 +7,7 @@ httpx[http2]
 imblearn==0.0
 joblib==1.4.2
 matplotlib==3.10.0
-MetaTrader5==5.0.45
+mt5linux==0.1.9
 numpy==1.26.4
 pandas==2.2.3
 pandas_ta==0.3.14b0
