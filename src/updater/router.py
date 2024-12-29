@@ -35,3 +35,10 @@ async def predict():
     await prediction_hourly()
 
     return None
+
+from src.updater.utils import run_notify_active_users
+
+@router.get("/send-test", responses=None)
+async def send_test():
+    await run_notify_active_users(message="No data received from yahoo finance")
+    return None
