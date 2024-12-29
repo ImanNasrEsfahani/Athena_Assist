@@ -77,6 +77,8 @@ certificatesResolvers:
       storage: acme.json
       httpChallenge:
         entryPoint: web
+log:
+  level: DEBUG
 EOL
 
     # Create empty acme.json and set permissions

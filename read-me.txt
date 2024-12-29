@@ -27,7 +27,11 @@ with domain
     which make a directory with name traefic in your project
 
 - run command docker compose -f docker-compose-with-domain.yml up -d
-    docker compose -f ./traefik/docker-compose.yml -f docker-compose-with-domain.yml up -d
+    docker compose -f ./traefik/docker-compose.yml up -d
+    docker compose -f docker-compose-with-domain.yml up -d
+    check dashboard
+        https://traefik.imannasr.com/
+
 7- install jupyter - optional
 8- install vnc
 9- install wine
