@@ -77,6 +77,7 @@ if [ -f "$SOURCES_LIST" ]; then
     # Use sed to comment out lines starting with "deb cdrom:" or "deb file:/cdrom"
     sudo sed -i '/^deb cdrom:/s/^/# /' "$SOURCES_LIST"
     sudo sed -i '/^deb file:\/cdrom/s/^/# /' "$SOURCES_LIST"
+    sudo sed -i '/file:\/\/\/cdrom/s/^/# /' "$SOURCES_LIST"
 
     echo "CD-ROM repositories have been commented out in $SOURCES_LIST"
 else
