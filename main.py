@@ -21,7 +21,7 @@ setup_logging()
 
 # from src.updater.models.base import Base as BaseUpdater
 
-import MetaTrader5 as mt5
+import mt5linux as mt5
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
