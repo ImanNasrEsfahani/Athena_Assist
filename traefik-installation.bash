@@ -14,15 +14,16 @@ check_docker() {
 # Function to install Docker
 install_docker() {
     echo "Installing Docker..."
-    sudo apt-get update
-    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    sudo apt-get update
-    sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-    sudo systemctl enable docker
-    sudo systemctl start docker
-    sudo usermod -aG docker $USER
+    sudo apt-get update || { echo "Failed to update package list"; exit 1; }
+
+    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common || { echo "Failed to install prerequisites"; exit 1; }
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - || { echo "Failed to add Docker GPG key"; exit 1; }
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"  || { echo "Failed to add Docker repository"; exit 1; }
+    sudo apt-get update || { echo "Failed to update package list"; exit 1; }
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io || { echo "Failed to install Docker"; exit 1; }
+    sudo systemctl enable docker || { echo "Failed to enable Docker service"; exit 1; }
+    sudo systemctl start docker || { echo "Failed to start Docker service"; exit 1; }
+    sudo usermod -aG docker $USER || { echo "Failed to add user to Docker group"; exit 1; }
     echo "Docker installed successfully."
 }
 
@@ -41,15 +42,15 @@ setup_traefik() {
 
     # Generate admin password for Traefik dashboard
     echo "Please enter a password for the Traefik dashboard:"
-    ADMIN_PASSWORD=$(openssl passwd -apr1)
-    ESCAPED_PASSWORD=$(echo "$ADMIN_PASSWORD" | sed 's/[\/&]/\\&/g')
+    ADMIN_PASSWORD=$(openssl passwd -apr1) || { echo "Failed to generate password hash"; exit 1; }
+    ESCAPED_PASSWORD=$(echo "$ADMIN_PASSWORD" | sed 's/\$/\$\$/g') || { echo "Failed to escape password"; exit 1; }
 
     # Create necessary directories
-    mkdir -p traefik
-    cd traefik
+    mkdir -p traefik || { echo "Failed to create traefik directory"; exit 1; }
+    cd traefik || { echo "Failed to change to traefik directory"; exit 1; }
 
     # Create traefik.yml
-    cat > traefik.yml <<EOL
+    cat > traefik.yml <<EOL || { echo "Failed to create traefik.yml"; exit 1; }
 api:
   dashboard: true
 
@@ -79,11 +80,11 @@ certificatesResolvers:
 EOL
 
     # Create empty acme.json and set permissions
-    touch acme.json
-    chmod 600 acme.json
+    touch acme.json || { echo "Failed to create acme.json"; exit 1; }
+    chmod 600 acme.json || { echo "Failed to set permissions on acme.json"; exit 1; }
 
     # Create docker-compose.yml
-    cat > docker-compose.yml <<EOL
+    cat > docker-compose.yml <<EOL || { echo "Failed to create docker-compose.yml"; exit 1; }
 version: '3'
 
 services:
@@ -108,7 +109,6 @@ services:
       - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=admin:${ADMIN_PASSWORD}"
       - "traefik.http.middlewares.auth.basicauth.users=admin:$ESCAPED_PASSWORD"
 
 networks:
@@ -117,7 +117,7 @@ networks:
 EOL
 
     # Start Traefik
-    docker-compose up -d
+    docker-compose up -d || { echo "Failed to start Traefik"; exit 1; }
 
     echo "Traefik has been set up and is running."
     echo "Access the Traefik dashboard at: https://${DASHBOARD_DOMAIN}"
