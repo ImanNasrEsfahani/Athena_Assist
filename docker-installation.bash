@@ -170,5 +170,34 @@ print_color "$GREEN" "Installation complete! Versions:"
 docker --version
 docker-compose --version
 
+# Check if user is in docker group
+if groups | grep -q '\bdocker\b'; then
+    print_color "$GREEN" "User is already in the docker group."
+else
+    print_color "$YELLOW" "Adding user to docker group..."
+    sudo usermod -aG docker $USER
+    print_color "$GREEN" "User added to docker group. Please log out and log back in for changes to take effect."
+    print_color "$YELLOW" "Alternatively, run 'newgrp docker' to apply changes in the current session."
+fi
+
+# Check Docker socket permissions
+if [ "$(stat -c %a /var/run/docker.sock)" != "660" ]; then
+    print_color "$YELLOW" "Adjusting Docker socket permissions..."
+    sudo chmod 660 /var/run/docker.sock
+    print_color "$GREEN" "Docker socket permissions adjusted."
+fi
+
+# Restart Docker service
+print_color "$YELLOW" "Restarting Docker service..."
+sudo systemctl restart docker
+print_color "$GREEN" "Docker service restarted."
+
+# Final check
+if docker ps &>/dev/null; then
+    print_color "$GREEN" "Docker is now accessible. You can run Docker commands without sudo."
+else
+    print_color "$RED" "Docker is still not accessible. Please try logging out and logging back in."
+fi
+
 print_color "$YELLOW" "Please log out and log back in for group changes to take effect."
 print_color "$YELLOW" "To use Docker as a non-root user, remember to log out and back in."
