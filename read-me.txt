@@ -34,8 +34,24 @@ with domain
 
 7- install jupyter - optional
 8- install GUI installation
-- login by GUI enviroment from panel
-9- install wine
+9- install wine by script
+- login by GUI environment from server panel
+    open firefox browser that is installed by wine script in the previous step and download the below applications
+
+    download meta trader 5 from your broker or below link from alpari
+    https://download.mql5.com/cdn/web/alpari/mt5/alpari5setup.exe
+
+    install python for wine windows from the below line
+    https://www.python.org/ftp/python/3.10.10/python-3.10.10-amd64.exe
+
+    install MetaTrader5 and mt5linux packages in terminal
+    apt install MetaTrader5 mt5linux
+
+    the then run the server
+    python3 -m mt5linux "C:\users\my\AppData\Local\Programs\Python\Python310\python.exe"
+
+    find port that has been shown in terminal and write it down
+
 10- install tightVNC on local system
 11- make a connection to vnc server point with ssh port forward
 12- connect to vnc server
