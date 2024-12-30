@@ -21,8 +21,6 @@ setup_logging()
 
 # from src.updater.models.base import Base as BaseUpdater
 
-from mt5linux import MetaTrader5 as mt5
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     loggerMain.info("test for iman")
@@ -30,6 +28,8 @@ async def lifespan(app: FastAPI):
     loggerMain.debug("test for iman")
 
     await bot_manager.initialize()
+    await bot_manager.start_webhook()
+
     # Start the scheduler
     # db = next(get_db())  # Get the database session for scheduling
     updater_start_scheduler()
@@ -37,11 +37,6 @@ async def lifespan(app: FastAPI):
 
     create_tables()
     # Base.metadata.create_all(bind=engine)
-
-    mt5 = MetaTrader5(address="host.docker.internal", port=18821)
-    if not mt5.initialize(address="host.docker.internal", port=18821):
-        print("MT5 initialization failed")
-        mt5.shutdown()
 
     yield
     loggerMain.info("Shutdown event triggered")
@@ -53,7 +48,7 @@ app = FastAPI(title="ِAthena Application", version="1.0", lifespan=lifespan)
 # Define allowed origins
 origins = [
     "http://localhost:8000",  # Adjust this to your frontend's URL
-    "https://t.abcsnap.online",  # Add your production URL if needed
+    "https://fastapi.imannasr.com",  # Add your production URL if needed
     "*",  # Use "*" to allow all origins (not recommended for production)
 ]
 

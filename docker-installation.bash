@@ -120,6 +120,12 @@ print_color "$YELLOW" "Removing old Docker versions if present..."
 sudo apt-get remove -y docker docker.io containerd runc docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin || { print_color "$RED" "Failed to remove old docker packages"; exit 1; }
 check_success "Removal of old Docker versions"
 
+# Reset failed Docker services
+print_color "$YELLOW" "Resetting failed Docker services..."
+sudo systemctl reset-failed docker.socket
+sudo systemctl reset-failed docker.service
+check_success "Reset of failed Docker services"
+
 # Update package list
 print_color "$YELLOW" "Updating package list..."
 sudo apt-get update || { print_color "$RED" "Failed to update apt packages"; exit 1; }

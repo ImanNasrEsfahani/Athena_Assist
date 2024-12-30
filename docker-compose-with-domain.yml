@@ -6,7 +6,6 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    attach: false
     ports:
       - "8000:8000"
     volumes:
@@ -18,9 +17,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.fastapi.rule=Host(`fastapi.imannasr.com`)"
-      - "traefik.http.routers.fastapi.entrypoints=websecure"
+      - "traefik.http.routers.fastapi.entrypoints=web,websecure"
       - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
       - "traefik.http.services.fastapi.loadbalancer.server.port=8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 networks:
   traefik_network:

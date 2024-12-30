@@ -19,6 +19,10 @@ class BotManager:
             self.application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
             await self.application.initialize()
 
+    async def start_webhook(self):
+        webhook_url = f"https://{settings.DOMAIN}/webhook"
+        await self.application.bot.set_webhook(url=webhook_url)
+
     async def shutdown(self):
         if self.application:
             await self.application.shutdown()

@@ -36,9 +36,46 @@ async def predict():
 
     return None
 
+
 from src.updater.utils import run_notify_active_users
+
 
 @router.get("/send-test", responses=None)
 async def send_test():
     await run_notify_active_users(message="No data received from yahoo finance")
     return None
+
+
+import httpx
+from mt5linux import MetaTrader5
+import socket
+
+@router.get("/call-external-service")
+async def call_external_service():
+    # async with httpx.AsyncClient() as client:
+    #     response = await client.get("http://host.docker.internal:18812")
+    #     return {"status_code": response.status_code, "data": response.json()}
+    # try:
+    #     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #     sock.connect(("host.docker.internal", 18800))  # Use appropriate host address
+    #     response = sock.recv(1024).decode()
+    #     sock.close()
+    #     return {"message": response}
+    # except Exception as e:
+    #     return {"error": str(e)}
+
+    # mt5 = MetaTrader5(host="127.0.0.1", port=18812)
+    mt5 = MetaTrader5(host="host.docker.internal", port=18812)
+    if not mt5.initialize():
+        print("MT5 initialization failed")
+        mt5.shutdown()
+
+    account_info = mt5.account_info()
+    # mt5.account_info().balance
+    return {
+        "balance": account_info.balance,
+        "equity": account_info.equity,
+        "profit": account_info.profit
+    }
+
+    return True

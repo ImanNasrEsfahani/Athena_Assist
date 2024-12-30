@@ -24,9 +24,9 @@ with domain
 5- install docker
 6- install traefic and config for domain
     chmod +x traefik-installation.bash
-    which make a directory with name traefic in your project
+    which make a directory with name traefic in your project that have docker compose traefik and also ssl certification
 
-- run command docker compose -f docker-compose-with-domain.yml up -d
+- run command docker compose
     docker compose -f ./traefik/docker-compose.yml up -d
     docker compose -f docker-compose-with-domain.yml up -d
     check dashboard
@@ -47,8 +47,10 @@ with domain
     install MetaTrader5 and mt5linux packages in terminal
     apt install MetaTrader5 mt5linux
 
+    attention to use server IP 0.0.0.0 insted of 127.0.0.1
+
     the then run the server
-    python3 -m mt5linux "C:\users\my\AppData\Local\Programs\Python\Python310\python.exe"
+    python3 -m mt5linux "C:\users\my\AppData\Local\Programs\Python\Python310\python.exe" --host 0.0.0.0 --p 18812
 
     find port that has been shown in terminal and write it down
 

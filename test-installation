@@ -1,0 +1,67 @@
+# Use Ubuntu as the base image
+FROM ubuntu:20.04
+
+# Avoid prompts from apt
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install Wine and other dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    wget
+
+# Enable 32-bit architecture support and add WineHQ repository
+RUN dpkg --add-architecture i386 && \
+    mkdir -p /etc/apt/keyrings && \
+    wget -O /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key && \
+    wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/focal/winehq-focal.sources
+
+
+# Install Wine and other dependencies
+RUN apt-get update && apt-get install -y \
+    wine \
+    wine32 \
+    winetricks \
+    xvfb \
+    python3 \
+    python3-pip \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set up Wine environment
+ENV WINEARCH=win32
+ENV WINEPREFIX=/root/.wine
+
+RUN apt-get update && apt-get install -y xvfb x11-xkb-utils xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic x11-apps
+
+ENV DISPLAY=:99
+
+RUN Xvfb :99 -screen 0 1024x768x16 & \
+    export DISPLAY=:99 && \
+    winetricks --unattended vcrun2015
+
+RUN apt-get update && apt-get install -y xvfb
+
+# Install Python for Windows
+RUN xvfb-run -a wine winecfg && \
+    xvfb-run -a bash -c \
+    "wget https://www.python.org/ftp/python/3.10.0/python-3.10.0.exe && \
+    wine python-3.10.0.exe /quiet InstallAllUsers=1 PrependPath=1 && \
+    rm python-3.10.0.exe"
+
+# Install mt5linux in both Linux and Windows Python environments
+RUN pip3 install mt5linux \
+    && wine python -m pip install mt5linux
+
+# Download and install MetaTrader5
+RUN wget https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/mt5setup.exe \
+    && wine mt5setup.exe /auto \
+    && rm mt5setup.exe
+
+# Set up the entry point
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 18812
+
+ENTRYPOINT ["/entrypoint.sh"]
