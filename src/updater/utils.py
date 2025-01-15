@@ -58,7 +58,7 @@ async def fetch_yahoo_finance_data(symbol: str, start: str, end: str, interval: 
             f"""Start of downloading from Yahoo Finance. Symbol: {symbol}, Start: {start}, End: {end}, Intervals: {interval}""")
 
         data = yf.download(tickers=symbol, start=start, end=end, interval=interval)
-
+        
         if data.empty:
             loggerUpdater.error(
                 f"No data found for {symbol} in the specified date range from Yahoo Finance in updater.")
@@ -66,8 +66,11 @@ async def fetch_yahoo_finance_data(symbol: str, start: str, end: str, interval: 
                 message=f"No data found for {symbol} in the specified date range from Yahoo Finance in updater.")
             return None  # Return None if no data is found
 
+        # Check if columns have multiple levels before dropping
+        if isinstance(data.columns, pd.MultiIndex):
+            data.columns = data.columns.droplevel(1)
+        
         # Process the data
-        data.columns = data.columns.droplevel(1)  # Remove the second label of columns
         data["timestamp"] = data.index  # Make a copy from index to a column with name 'datetime'
         data.reset_index(drop=True, inplace=True)  # Remove index
         data.index.name = None
