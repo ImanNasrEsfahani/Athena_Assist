@@ -2,3 +2,5 @@ venv/
 .ipynb_checkpoints/
 .idea/
 traefik/
+.vscode/
+__pycache__
