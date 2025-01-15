@@ -17,6 +17,7 @@ services:
     attach: false
     volumes:
       - .:/app  # Bind mount current directory to /app in the container
+      - ./logging.ini:/app/logging.ini:ro
       # - ./db:/app/db # bind database users
       # - ./models/market.db:/app/models/market.db # bind databse market price
     environment:

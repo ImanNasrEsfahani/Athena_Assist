@@ -45,7 +45,7 @@ RUN pip install --no-cache-dir -r base.txt
 EXPOSE 8000
 
 # Volume for logs and additional access to host filesystem
-VOLUME ["/logging.ini"]
+# VOLUME ["/logging.ini"]
 
 # Command to run the FastAPI application with uvicorn and ngrok
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port 8000 --log-level info --reload"]
