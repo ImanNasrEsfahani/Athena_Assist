@@ -1,27 +1,27 @@
-# Athena Assistant
+# Athena Assistant 🤖
 
-A comprehensive trading automation platform that combines MetaTrader, Docker, and FastAPI to deliver intelligent forex trading signals through Telegram.
+A comprehensive trading automation platform that combines MetaTrader, Docker, and FastAPI to deliver intelligent forex trading signals through Telegram ✨
 
-## Overview
+## Overview 🎯
 
 Athena Assistant is an innovative project that creates a complete trading ecosystem by integrating multiple technologies:
 
-- Windows MetaTrader running on Linux using Wine technology
-- A lightweight virtual server setup
-- Docker with Traefik for efficient traffic management
-- FastAPI application for executing various trading strategies
+- Windows MetaTrader running on Linux using Wine technology 🖥️
+- A lightweight virtual server setup ⚡
+- Docker with Traefik for efficient traffic management 🐳
+- FastAPI application for executing various trading strategies 🚀
 
 The system analyzes different timeframes and trading strategies for forex markets, delivering notifications directly to Telegram.
 
-## Features
+## Features 💫
 
-- **MetaTrader Integration**: Seamless operation of Windows MetaTrader on Linux systems[1]
-- **Containerized Architecture**: Docker-based deployment with Traefik for robust traffic management[4]
+- **MetaTrader Integration**: Seamless operation of Windows MetaTrader on Linux systems
+- **Containerized Architecture**: Docker-based deployment with Traefik for robust traffic management
 - **Intelligent Analysis**: Multi-timeframe analysis capabilities for forex markets
 - **Automated Notifications**: Real-time trading signals delivered via Telegram
 - **Strategy Flexibility**: Support for multiple trading strategies and timeframes
 
-## Installation
+## Installation ⚙️
 
 1. Clone the repository:
 ```bash
@@ -34,7 +34,7 @@ cd athena_assist
 cat read-me.txt
 ```
 
-## Contributing
+## Contributing 🤝
 
 We welcome contributions! Here's how you can help:
 
@@ -44,10 +44,22 @@ We welcome contributions! Here's how you can help:
 
 Please read our contribution guidelines before submitting any PRs.
 
-## License
+## License 📝
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+Copyright 2024 [Iman Nasr esfahani]
 
-## Contact
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+## Contact 📫
 
 For questions and support, please open an issue in the GitHub repository.
