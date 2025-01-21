@@ -27,8 +27,12 @@ async def lifespan(app: FastAPI):
     loggerMain.warn("test for iman")
     loggerMain.debug("test for iman")
 
-    await bot_manager.initialize()
-    await bot_manager.start_webhook()
+    try:
+        await bot_manager.initialize()
+        await bot_manager.start_webhook()
+    except Exception as e:
+        # Handle the exception
+        print(f"An error occurred: {e}")
 
     # Start the scheduler
     # db = next(get_db())  # Get the database session for scheduling
